@@ -332,7 +332,9 @@ for idx in "${!STEP_TITLES[@]}"; do
   run_step "${STEP_TITLES[$idx]}" "${STEP_CMDS[$idx]}" "${TMPDIR}/step_${idx}.out"
 done
 
-rg_lines() { rg -n "$1" "$REPORT" 2>/dev/null || true; }
+rg_lines() {
+  rg -n "$1" "$REPORT" 2>/dev/null | rg -v '^[0-9]+:cmd:' || true
+}
 
 P_PLUGIN="$(rg_lines 'duplicate plugin id|plugins\.allow is empty|discovered non-bundled plugins|loaded without install|untracked local code|extensions/' | head -n 12)"
 A_AUTH="$(rg_lines 'No API key found|Missing auth|unauthorized|forbidden|401|403|invalid api key|credential|auth' | head -n 12)"
